@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;400&display=swap');
+
+        *{
+            box-sizing: border-box;
+        }
+
+        body{
+            background-color: #b8c6db;
+            background-image: linear-gradient(315deg, #b8c6db, 0%, #f5f7fa 100%);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .quiz-container {
+            background-color: #2cc994;
+            border: darkslateblue solid 3px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px 2px rgba(100,100,100, 0.1);
+            width: 600px;
+            overflow: hidden;
+        }
+
+        .quiz-header {
+            padding: 4rem;
+        }
+
+        h2{
+            padding: 1rem;
+            text-align: center;
+            margin: 0;
+        }
+
+        ul {
+            list-style-type: none;
+            padding:0;
+        }
+
+        ul li {
+            font-size: 1.2rem;
+            margin: 1rem;
+        }
+
+        ul li label{
+            cursor:pointer;
+        }
+
+        button{
+            background-color: #ffd433;
+            color:#fff;
+            border-top: black solid 3px;
+            display:block;
+            width:100%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-family: inherit;
+            padding: 1.3rem;
+        }
+
+        button:hover{
+            background-color: #c2a32d;
+        }
+
+        button:focus {
+            outline: none;
+            background-color: #c2a32d;
+        }
+    </style>
+    <title>QuizUsingAPI</title>
+</head>
+<body>
+<!--<h2 id="questions:"> Questions </h2><br>-->
+<!--<ol>-->
+<!--    <li id="q1"> Q1 </li> <br>-->
+<!--    <li id="q2"> Q1 </li> <br>-->
+<!--    <li id="q3"> Q1 </li> <br>-->
+<!--    <li id="q4"> Q1 </li> <br>-->
+<!--    <li id="q5"> Q1 </li> <br>-->
+<!--    <li id="q6"> Q1 </li> <br>-->
+<!--    <li id="q7"> Q1 </li> <br>-->
+<!--    <li id="q8"> Q1 </li> <br>-->
+<!--    <li id="q9"> Q1 </li> <br>-->
+<!--    <li id="q10"> Q1 </li> <br>-->
+<!--</ol>-->
+<div id="questionwdw"> </div>
+<div class="quiz-container" id="quiz">
+    <div class="quiz-header">
+        <h2 id="question_var">Question text</h2>
+        <ul>
+            <li>
+                <input type="radio" name="answer" id="a" class="answer">
+                <label for="a" id="a_text">Question</label>
+            </li>
+
+            <li>
+                <input type="radio" name="answer" id="b" class="answer">
+                <label for="b" id="b_text">Question</label>
+            </li>
+
+            <li>
+                <input type="radio" name="answer" id="c" class="answer">
+                <label for="c" id="c_text">Question</label>
+            </li>
+
+            <li>
+                <input type="radio" name="answer" id="d" class="answer">
+                <label for="d" id="d_text">Question</label>
+            </li>
+        </ul>
+    </div>
+    <button id="submit">Submit</button>
+</div>
+<!--    <script>-->
+<!--        const currentQuiz = 0;-->
+<!--        var currentQuestion = document.getElementById('question');-->
+
+<!--        // function loadquiz() {-->
+<!--        //     var xhttp = new XMLHttpRequest();-->
+<!--        //     xhttp.onreadystatechange = function(){-->
+<!--        //         if(xhttp.readyState == 4 && xhttp.status == 200){-->
+<!--        //             var data = JSON.parse(xhttp.responseText);-->
+<!--        //             currentQuestion.innerHTML = (xhttp.responseText);-->
+<!--        //             console.log("QUIZ LOADED SUCCESFULLY");-->
+<!--        //             console.log(data[1]);-->
+<!--        //         }-->
+<!--        //     }-->
+<!--        //     xhttp.open('GET', 'https://opentdb.com/api.php?amount=10&category=18&difficulty=easy&type=multiple');-->
+<!--        //     xhttp.send();-->
+<!--        // }-->
+<!--        //-->
+<!--        //   loadquiz();-->
+
+<!--              //deselectAnswers()-->
+<!--              // const currentQuizData = quizData[currentQuiz];-->
+<!--              //-->
+<!--              // questionEL.innerText = currentQuizData.question; // try putting innerHTML , innerText and textContent-->
+<!--              //-->
+<!--              // a_text.innerHTML = currentQuizData.a;-->
+<!--              // b_text.innerHTML = currentQuizData.b;-->
+<!--              // c_text.innerHTML = currentQuizData.c;-->
+<!--              // d_text.innerHTML = currentQuizData.d;-->
+
+<!--    </script>-->
+<script>
+    const api_url="https://opentdb.com/api.php?amount=10&category=18&difficulty=easy&type=multiple";
+    const answerEls = document.querySelectorAll('.answer');
+    const submitBtn = document.getElementById('submit');
+
+    deselectAnswers();
+    getquiz();
+
+    async function getquiz() {
+        const response = await fetch(api_url);
+        const data = await response.json();
+        var list_of_questions = data.results;
+        for(var i = 0; i< list_of_questions.length;i++){
+            document.getElementById('question_var').innerHTML = `Q${i+1}: ` + data.results[i]["question"] + '?';
+            document.getElementById('a_text').innerHTML = data.results[i].incorrect_answers[0];
+            document.getElementById('b_text').innerHTML = data.results[i].incorrect_answers[1];
+            document.getElementById('c_text').innerHTML = data.results[i].incorrect_answers[2];
+            document.getElementById('d_text').innerHTML = data.results[i].correct_answer;
+            var correct_option = data.results[i]["correct_answer"];
+            // console.log(data.results[i].question);
+            // console.log(data.results[i].incorrect_answers[0]);
+            // console.log(data.results[i].incorrect_answers[1]);
+            // console.log(data.results[i].incorrect_answers[2]);
+            console.log(correct_option);
+
+            submitBtn.addEventListener('click', () => {
+                const answer = getSelected()
+                console.log(answer);
+                if (answer) {
+                    if (answer === correct_option){
+                        console.log("correct");
+                    }
+                    else{
+                        console.log("Wrong option selected");
+                    }
+                }
+            })
+        }
+    }
+
+    function deselectAnswers() {
+        answerEls.forEach(answerEl => answerEl.checked = false)
+    }
+
+    function getSelected() {
+        let answer;
+        answerEls.forEach(answerEl => {
+            if(answerEl.checked) {
+                answer = answerEl;
+            }
+        })
+        return answer;
+    }
+
+    // submitBtn.addEventListener('click', () => {
+    //     const answer  = getSelected()
+    //     console.log(answer);
+    //     if(answer){
+    //         if(answer === )
+    //     }
+        // if(answer){
+        //     if(answer)
+        //     if( answer === quizData[currentQuiz].correct) {
+        //         score++;
+        //     }
+        //     currentQuiz++;
+        //     if(currentQuiz < quizData.length) {
+        //         loadQuiz()
+        //     }
+        //     else {
+        //         quiz.innerHTML = `<h2>You answered ${score}/${quizData.length} questions correctly!</h2>
+        //          <button onclick="location.reload()">Reload</button>`;
+        //     }
+        // }
+  //  } )
+</script>
+</body>
+</html>
