@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz Using 2nd API</title>
+    <style>
+
+        /**{*/
+        /*    box-sizing: border-box;*/
+        /*}*/
+
+        body{
+            background-color: #b8c6db;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .quiz_container {
+            /*background-color: #fff;*/
+            background-image: linear-gradient(315deg, lightcyan, 50%, #ffba83  100%);
+            border: darkslateblue solid 3px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px 2px rgba(100,100,100, 0.1);
+            width: 700px;
+            overflow: hidden;
+        }
+
+        .quiz_header{
+            padding: 4rem;
+        }
+
+        ol {
+            list-style-type: none;
+            padding:0;
+            margin-top:2rem;
+        }
+
+        ol li {
+            font-size: 1.2rem;
+            margin-top:1.5rem;
+        }
+
+        ol li label{
+            cursor:pointer;
+        }
+
+        button{
+            background-color: #95e385;
+            color:black;
+            border-top: black solid 3px;
+            display:block;
+            width:100%;
+            cursor: pointer;
+            font-size: 1.3rem;
+            font-family: inherit;
+            padding: 1.3rem;
+        }
+
+        button:hover{
+            background-color: #61c44c;
+        }
+
+        button:focus {
+            outline: none;
+            background-color: #61c44c;
+        }
+
+        /* Hide the default radio button */
+        input[type="radio"] {
+            display: none;
+        }
+
+        /* Style for the label that will represent the radio button */
+        .radio-label {
+            display: inline-block;
+            margin-bottom: 5px;
+            margin-right: 10px;
+            padding: 5px 20px;
+            border: 2px solid black;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        /* Style when the radio button is checked */
+        input[type="radio"]:checked + .radio-label {
+            border-color: #009688;
+            background-color: #00abcd;
+            color: white;
+        }
+        input[type="radio"]:hover + .radio-label {
+            border-color: #001234;
+            background-color: #00abcd;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+<div class="quiz_container" id="quiz">
+    <div class="quiz_header">
+<h2 id="question"> Question: </h2>
+<ol>
+    <li>
+        <input type="radio" name="answer" id="a" class="answer">
+        <label for="a" class="radio-label" id="a_text">OPTION</label>
+        <br>
+    </li>
+
+    <li>
+        <input type="radio" name="answer" id="b" class="answer">
+        <label for="b" class="radio-label" id="b_text">OPTION</label>
+    </li>
+
+    <li>
+        <input type="radio" name="answer" id="c" class="answer">
+        <label for="c" class="radio-label" id="c_text">OPTION</label>
+    </li>
+
+    <li>
+        <input type="radio" name="answer" id="d" class="answer">
+        <label for="d" class="radio-label" id="d_text">OPTION</label>
+    </li>
+</ol>
+    </div>
+    <button id="submit">Submit</button>
+</div>
+    <script>
+        const answerEls = document.querySelectorAll('.answer');
+        const submitBtn = document.getElementById('submit');
+        const api_url = "https://the-trivia-api.com/v2/questions";
+        var correct_option;
+
+        async function loadingquiz(){
+            deselectAnswers();
+
+            const response = await fetch(api_url);
+            const data = await response.json();
+            //console.log('anser' + data[0].incorrectAnswers[0]);
+            //document.getElementById('data').innerText = data;
+
+            for(var i = 0;i < data.length; i++) {
+                document.getElementById('question').innerText = `Question: ` + data[i].question.text;
+                document.getElementById('a_text').innerText = data[i].incorrectAnswers[0];
+                document.getElementById('b_text').innerText = data[i].incorrectAnswers[1];
+                document.getElementById('c_text').innerText = data[i].incorrectAnswers[2];
+                document.getElementById('d_text').innerText = data[i].correctAnswer;
+                correct_option = data[i].correctAnswer;
+                //console.log(data[i].question.text);
+            }
+            //console.log(data[0]);
+        }
+
+        function deselectAnswers() {
+            answerEls.forEach(answerEl => answerEl.checked = false)
+        }
+
+        function select_answer(){
+            let answer_selected;
+            answerEls.forEach(answerEl => {
+                if(answerEl.checked) {
+                    answer_selected = answerEl.id;
+                }
+            })
+            return answer_selected;
+        }
+
+
+        loadingquiz()
+
+    </script>
+</body>
+</html>
